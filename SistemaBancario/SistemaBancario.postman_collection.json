@@ -1,0 +1,198 @@
+{
+	"info": {
+		"_postman_id": "113ce9f1-357c-4518-b2ee-7de96bfef48a",
+		"name": "SistemaBancario",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Listar todas contas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/conta/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"conta",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar conta pelo numero",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/conta/0589",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"conta",
+						"0589"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar conta",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"numero\": \"0589\",\r\n    \"titular\": \"Dani\",\r\n    \"saldo\": 5000000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/conta/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"conta",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alterar conta",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"numero\": \"5486\",\r\n    \"titular\": \"Lilly\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/conta/8594",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"conta",
+						"8594"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar conta",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"numero\": \"5486\",\r\n    \"titular\": \"Lilly\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/conta/8549",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"conta",
+						"8549"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Operações (Sacar)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/conta/numero/sacar?numero=0057&valor=33.85",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"conta",
+						"numero",
+						"sacar"
+					],
+					"query": [
+						{
+							"key": "numero",
+							"value": "0057"
+						},
+						{
+							"key": "valor",
+							"value": "33.85"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Operações (Depositar)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/conta/numero/sacar?numero=0057&valor=33.85",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"conta",
+						"numero",
+						"sacar"
+					],
+					"query": [
+						{
+							"key": "numero",
+							"value": "0057"
+						},
+						{
+							"key": "valor",
+							"value": "33.85"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
