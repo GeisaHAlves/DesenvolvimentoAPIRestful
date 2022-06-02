@@ -20,10 +20,13 @@ public class JwtWebConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UsuarioDetalheService usuarioDetalhe;
 
+	@Autowired
+	private JwtRequestsFilter jwtRequestsFilter;
+	
 //    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //        auth.userDetailsService(usuarioDetalhe);
-//    }
+    
 	@Override
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -35,8 +38,6 @@ public class JwtWebConfig extends WebSecurityConfigurerAdapter {
 //	 return NoOpPasswordEncoder.getInstance();
 //	}
 
-	@Autowired
-	private JwtRequestsFilter jwtRequestsFilter;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -50,9 +51,14 @@ public class JwtWebConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers("/usuario/authenticate", "/usuario/salvar").permitAll()
-				.anyRequest().authenticated().and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.csrf().disable().authorizeRequests()
+		.antMatchers("/usuario/authenticate", "/usuario/salvar")
+		.permitAll()
+		.anyRequest()
+		.authenticated()
+		.and()
+		.sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtRequestsFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
