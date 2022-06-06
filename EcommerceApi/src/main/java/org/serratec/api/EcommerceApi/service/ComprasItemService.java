@@ -22,6 +22,7 @@ public class ComprasItemService {
 			item.setProduto(produto.get());
 			item.setPreco(produto.get().getValorUnitario() * item.getQuantidade());
 		}
+			
 		return item;
 	}
 

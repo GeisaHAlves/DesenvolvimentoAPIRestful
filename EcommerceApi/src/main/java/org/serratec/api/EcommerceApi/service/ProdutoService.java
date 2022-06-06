@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+
 import org.serratec.api.EcommerceApi.DTO.ProdutoDTO;
 import org.serratec.api.EcommerceApi.DTO.RelatorioDTO;
+import org.serratec.api.EcommerceApi.exception.EmailException;
 import org.serratec.api.EcommerceApi.exception.EstoqueException;
+import org.serratec.api.EcommerceApi.exception.PedidoException;
 import org.serratec.api.EcommerceApi.exception.ProdutoException;
 import org.serratec.api.EcommerceApi.model.Categoria;
 import org.serratec.api.EcommerceApi.model.Pedido;
@@ -27,6 +31,8 @@ public class ProdutoService {
 	FuncionarioRepository funcionarioRepository;
 	@Autowired
 	CategoriaRepository categoriaRepository;
+	@Autowired
+	EmailService emailService;
 
 	public Produto toModel(Produto produto, ProdutoDTO produtoDTO) {
 		produto.setDataValidade(produtoDTO.getDataValidade());
@@ -138,7 +144,7 @@ public class ProdutoService {
 		}
 	}
 
-	public void atualizarEstoqueVenda(Pedido pedido) throws EstoqueException {
+	public void atualizarEstoqueVenda(Pedido pedido) throws EstoqueException, EmailException, MessagingException, PedidoException {
 		for (VendasItem item : pedido.getItens()) {
 			Optional<Produto> produtoOpt = produtoRepository.findById(item.getProduto().getIdProduto());
 			if (produtoOpt.isPresent()) {
@@ -146,6 +152,10 @@ public class ProdutoService {
 				if(produto.getQtdEstoque() <= 0)
 					throw new EstoqueException("Produto sem estoque.");
 				produto.tirarEstoque(item.getQuantidade());
+				if (produto.getQtdEstoque() <= 5) {
+					emailService.emailProprietario(produto);
+				}
+					
 				produtoRepository.save(produto);
 			}
 		}
