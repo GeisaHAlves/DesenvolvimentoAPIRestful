@@ -146,6 +146,13 @@ public class ProdutoService {
 				if(produto.getQtdEstoque() <= 0)
 					throw new EstoqueException("Produto sem estoque.");
 				produto.tirarEstoque(item.getQuantidade());
+<<<<<<< Updated upstream
+=======
+				if (produto.getQtdEstoque() <= 5) {
+					emailService.emailProprietario(produto);
+				}
+					
+>>>>>>> Stashed changes
 				produtoRepository.save(produto);
 			}
 		}
