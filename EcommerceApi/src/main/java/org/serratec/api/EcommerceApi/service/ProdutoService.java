@@ -4,15 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+
 import org.serratec.api.EcommerceApi.DTO.ProdutoDTO;
 import org.serratec.api.EcommerceApi.DTO.RelatorioDTO;
+import org.serratec.api.EcommerceApi.exception.EmailException;
 import org.serratec.api.EcommerceApi.exception.EstoqueException;
+import org.serratec.api.EcommerceApi.exception.PedidoException;
 import org.serratec.api.EcommerceApi.exception.ProdutoException;
 import org.serratec.api.EcommerceApi.model.Categoria;
 import org.serratec.api.EcommerceApi.model.Pedido;
 import org.serratec.api.EcommerceApi.model.Produto;
 import org.serratec.api.EcommerceApi.model.VendasItem;
 import org.serratec.api.EcommerceApi.repository.CategoriaRepository;
+import org.serratec.api.EcommerceApi.repository.ComprasItemRepository;
 import org.serratec.api.EcommerceApi.repository.FuncionarioRepository;
 import org.serratec.api.EcommerceApi.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +32,10 @@ public class ProdutoService {
 	FuncionarioRepository funcionarioRepository;
 	@Autowired
 	CategoriaRepository categoriaRepository;
+	@Autowired
+	ComprasItemRepository comprasItemRepository;
+	@Autowired
+	EmailService emailService;
 
 	public Produto toModel(Produto produto, ProdutoDTO produtoDTO) {
 		produto.setDataValidade(produtoDTO.getDataValidade());
@@ -121,14 +130,6 @@ public class ProdutoService {
 		return produtoDTOs;
 	}
 
-	public String addEstoque(Integer idProduto, Integer quantidade) throws ProdutoException {
-		Optional<Produto> prodOptional = produtoRepository.findById(idProduto);
-		if (prodOptional.isPresent()) {
-			Produto produto = prodOptional.get();
-			atualizarEstoqueCompra(produto, quantidade);
-		}
-		throw new ProdutoException("O estoque não foi atualizado");
-	}
 
 	public void salvarListaProduto(List<ProdutoDTO> listaProdutoDTO) {
 		for (ProdutoDTO produtoDTO : listaProdutoDTO) {
@@ -138,7 +139,7 @@ public class ProdutoService {
 		}
 	}
 
-	public void atualizarEstoqueVenda(Pedido pedido) throws EstoqueException {
+	public void atualizarEstoqueVenda(Pedido pedido) throws EstoqueException, EmailException, MessagingException, PedidoException {
 		for (VendasItem item : pedido.getItens()) {
 			Optional<Produto> produtoOpt = produtoRepository.findById(item.getProduto().getIdProduto());
 			if (produtoOpt.isPresent()) {
@@ -147,6 +148,8 @@ public class ProdutoService {
 					throw new EstoqueException("Produto sem estoque.");
 				produto.tirarEstoque(item.getQuantidade());
 				produtoRepository.save(produto);
+				if(produto.getQtdEstoque() <= 5)
+					emailService.emailProprietario(produto);
 			}
 		}
 	}

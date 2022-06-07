@@ -85,12 +85,12 @@ public class CompraService {
 	public String salvar(CompraDTO compraDTO) {
 		Compra compra = new Compra();
 		compra = toModel(compra, compraDTO);
+		compraRepository.save(compra);
 		for (ComprasItem item : compra.getListaCompra()) {
 			produtoService.atualizarEstoqueCompra(item.getProduto(), item.getQuantidade());
 			comprasItemRepository.save(item);
 		}
 		
-		compraRepository.save(compra);
 		return "Compra do fornecedor finalizada com sucesso";
 	}
 

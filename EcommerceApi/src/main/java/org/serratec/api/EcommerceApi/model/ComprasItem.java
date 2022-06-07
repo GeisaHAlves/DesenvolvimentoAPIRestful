@@ -20,7 +20,7 @@ public class ComprasItem implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="compras_item_cd_id")
-	private Integer idVendasItem;
+	private Integer idComprasItem;
 
 	@ManyToOne
 	@JoinColumn(name="produto_id", referencedColumnName = "produto_cd_id", nullable=false)
@@ -38,12 +38,12 @@ public class ComprasItem implements Serializable {
 
 	public ComprasItem() {}
 
-	public Integer getIdVendasItem() {
-		return idVendasItem;
+	public Integer getIdComprasItem() {
+		return idComprasItem;
 	}
 
-	public void setIdVendasItem(Integer idVendasItem) {
-		this.idVendasItem = idVendasItem;
+	public void setIdComprasItem(Integer idComprasItem) {
+		this.idComprasItem = idComprasItem;
 	}
 
 	public Produto getProduto() {

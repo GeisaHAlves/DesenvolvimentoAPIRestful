@@ -20,6 +20,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer>{
 			+ "on (v.PRODUTO_ID=p.PRODUTO_CD_ID )\r\n"
 			+ "group by nomeProduto \r\n"
 			+ "order by quantidadeVendida\r\n"
-			+ "desc", nativeQuery = true)
+			+ "desc\r\n"
+			+"limit 5", nativeQuery = true)
 	public List<RelatorioDTO> relatorio();
 }

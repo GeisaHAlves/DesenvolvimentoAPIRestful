@@ -10,7 +10,6 @@ import javax.mail.MessagingException;
 
 import org.serratec.api.EcommerceApi.DTO.ItemDTO;
 import org.serratec.api.EcommerceApi.DTO.PedidoDTO;
-import org.serratec.api.EcommerceApi.DTO.RelatorioDTO;
 import org.serratec.api.EcommerceApi.exception.EmailException;
 import org.serratec.api.EcommerceApi.exception.EstoqueException;
 import org.serratec.api.EcommerceApi.exception.PedidoException;
@@ -73,10 +72,7 @@ public class PedidoService {
 	}
 
 	public PedidoDTO toDTO(PedidoDTO pedidoDTO, Pedido pedido) {
-//		pedidoDTO.setIdPedido(pedido.getIdPedido());
 		pedidoDTO.setIdCliente(pedido.getCliente().getIdCliente());
-//		pedidoDTO.setNotaFiscal(pedido.getNotaFiscal());
-//		pedidoDTO.setTipoPedido(pedido.getTipoPedido());
 		
 		List<ItemDTO> itens = new ArrayList<>();
 		Double valorTotal = 0.0;
@@ -94,7 +90,7 @@ public class PedidoService {
 		return pedidoDTO;
 	}
 	
-	void salvarListaItens(List<VendasItem> itens) {
+	void salvarListaVendas(List<VendasItem> itens) {
 		for (VendasItem item : itens) {
 			vendasItemRepository.save(item);
 		}
@@ -104,7 +100,7 @@ public class PedidoService {
 		Pedido pedido = new Pedido();
 		pedido = toModel(pedido, pedidoDTO);
 		pedidoRepository.save(pedido);
-		salvarListaItens(pedido.getItens());
+		salvarListaVendas(pedido.getItens());
 		produtoService.atualizarEstoqueVenda(pedido);
 		emailService.emailCliente(pedidoDTO, pedido);
 		return "Pedido salvo com sucesso";
