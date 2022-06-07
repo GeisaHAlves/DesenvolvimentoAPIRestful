@@ -85,15 +85,23 @@ public class ProdutoService {
 
 	}
 
-	public void delete(Integer idProduto) {
+	public String delete(Integer idProduto) throws ProdutoException{
+Optional<Produto> produtoOptional = produtoRepository.findById(idProduto);
+		
+		if (produtoOptional.isPresent()) {
 		produtoRepository.deleteById(idProduto);
+		return "Produto deletado com sucesso!";
 	}
+		throw new ProdutoException("Produto não encontrado");
+	}
+	
 
 	public String atualizar(Integer idProduto, ProdutoDTO produtoDTO) throws ProdutoException {
 		Optional<Produto> prodOptional = produtoRepository.findById(idProduto);
+		Produto produto = new Produto();
 
 		if (prodOptional.isPresent()) {
-			Produto produto = prodOptional.get();
+			produto = prodOptional.get();
 			if (produtoDTO.getValor() != null) {
 				produto.setValorUnitario(produtoDTO.getValor());
 			}
@@ -125,7 +133,7 @@ public class ProdutoService {
 		for (Produto produto : lisProdutos) {
 			ProdutoDTO produtoDTO = new ProdutoDTO();
 			produtoDTO = toDTO(produtoDTO, produto);
-			produtoRepository.save(produto);
+			produtoDTOs.add(produtoDTO);
 		}
 		return produtoDTOs;
 	}
@@ -134,7 +142,7 @@ public class ProdutoService {
 	public void salvarListaProduto(List<ProdutoDTO> listaProdutoDTO) {
 		for (ProdutoDTO produtoDTO : listaProdutoDTO) {
 			Produto produto = new Produto();
-			toModel(produto, produtoDTO);
+			produto = toModel(produto, produtoDTO);
 			produtoRepository.save(produto);
 		}
 	}

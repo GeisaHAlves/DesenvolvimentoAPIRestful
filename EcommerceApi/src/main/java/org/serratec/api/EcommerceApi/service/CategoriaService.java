@@ -32,9 +32,9 @@ public class CategoriaService {
 
 	public String salvar(CategoriaDTO categoriaDTO) {
 		Categoria categoria = new Categoria();
-		toModel(categoria, categoriaDTO);
+		categoria = toModel(categoria, categoriaDTO);
 		categoriaRepository.save(categoria);
-		return "Novo categoria cadastrado.\nNome: " + categoria.getNome() + "\nID categoria: "
+		return "Novo categoria cadastrada.\nNome: " + categoria.getNome() + "\nID categoria: "
 				+ categoria.getIdCategoria();
 	}
 
@@ -45,14 +45,21 @@ public class CategoriaService {
 
 		if (funOptional.isPresent()) {
 			categoria = funOptional.get();
-			toDTO(categoriaDTO, categoria);
+			categoriaDTO = toDTO(categoriaDTO, categoria);
 			return categoriaDTO;
 		}
 		throw new CategoriaException("Categoria não encontrada.");
 	}
 
-	public void delete(Integer idCategoria) {
-		categoriaRepository.deleteById(idCategoria);
+	public String delete(Integer idCategoria) throws CategoriaException {
+		Optional<Categoria> categoriaOptional = categoriaRepository.findById(idCategoria);
+
+		if (categoriaOptional.isPresent()) {
+			categoriaRepository.deleteById(idCategoria);
+			return "Categoria deletada com sucesso";
+		}
+		throw new CategoriaException("Categoria não encontrada.");
+		
 	}
 
 	public String atualizar(Integer idCategoria, CategoriaDTO categoriaDTO) throws CategoriaException {
@@ -62,25 +69,25 @@ public class CategoriaService {
 		if (funOptional.isPresent()) {
 			categoria = funOptional.get();
 			if (categoriaDTO.getDescricao() != null) {
-				categoria.setDescricao(categoria.getDescricao());
+				categoria.setDescricao(categoriaDTO.getDescricao());
 			}
 			if (categoriaDTO.getNome() != null) {
-				categoria.setNome(categoria.getNome());
+				categoria.setNome(categoriaDTO.getNome());
 			}
 			categoriaRepository.save(categoria);
-			return "Categoria " + categoria.getNome() + " foi atualizado.";
+			return "Categoria " + categoria.getNome() + " foi atualizada.";
 		}
-		throw new CategoriaException("O categoria não foi atualizado");
+		throw new CategoriaException("A categoria não foi atualizada");
 	}
 
 	public List<CategoriaDTO> todosCategorias() {
 		List<Categoria> lisCategorias = categoriaRepository.findAll();
-		List<CategoriaDTO> categoriaDTOs = new ArrayList<CategoriaDTO>();
+		List<CategoriaDTO> categoriaDTOs = new ArrayList<>();
 
 		for (Categoria categoria : lisCategorias) {
 			CategoriaDTO categoriaDTO = new CategoriaDTO();
-			toDTO(categoriaDTO, categoria);
-			categoriaRepository.save(categoria);
+			categoriaDTO = toDTO(categoriaDTO, categoria);
+			categoriaDTOs.add(categoriaDTO);
 		}
 		return categoriaDTOs;
 	}
@@ -88,7 +95,7 @@ public class CategoriaService {
 	public void salvarListaCategoria(List<CategoriaDTO> listaCategoriaDTO) {
 		for (CategoriaDTO categoriaDTO : listaCategoriaDTO) {
 			Categoria categoria = new Categoria();
-			toModel(categoria, categoriaDTO);
+			categoria = toModel(categoria, categoriaDTO);
 			categoriaRepository.save(categoria);
 		}
 	}

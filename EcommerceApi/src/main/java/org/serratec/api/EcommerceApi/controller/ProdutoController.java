@@ -39,15 +39,13 @@ public class ProdutoController {
 	}
 	
 	@PutMapping("/atualizar/{idProduto}") 
-    public ResponseEntity<Void> atualizar(@PathVariable Integer idProduto,@RequestBody ProdutoDTO produtoDTO) throws ProdutoException{
-        produtoService.atualizar(idProduto, produtoDTO);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    public ResponseEntity<String> atualizar(@PathVariable Integer idProduto,@RequestBody ProdutoDTO produtoDTO) throws ProdutoException{
+        return new ResponseEntity<>( produtoService.atualizar(idProduto, produtoDTO),HttpStatus.ACCEPTED);
 	}
 	
 	@DeleteMapping("/delete/{idProduto}")
-	public ResponseEntity<Void> delete(@PathVariable Integer idProduto) {
-		produtoService.delete(idProduto);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<String> delete(@PathVariable Integer idProduto) throws ProdutoException {
+				return new ResponseEntity<>(produtoService.delete(idProduto),HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/lista")

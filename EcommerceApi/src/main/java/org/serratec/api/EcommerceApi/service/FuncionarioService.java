@@ -32,7 +32,7 @@ public class FuncionarioService {
 	
 	public String salvar(FuncionarioDTO funcionarioDTO) {
 		Funcionario funcionario = new Funcionario();
-		toModel(funcionario, funcionarioDTO);
+		funcionario = toModel(funcionario, funcionarioDTO);
 		funcionarioRepository.save(funcionario);
 		return "Novo funcionario cadastrado.\nNome: " + funcionario.getNome()
 		+ "\nID funcionario: " + funcionario.getIdFuncionario();
@@ -45,15 +45,22 @@ public class FuncionarioService {
 		
 		if(funOptional.isPresent()) {
 			funcionario = funOptional.get();
-			toDTO(funcionarioDTO, funcionario);
+			funcionarioDTO = toDTO(funcionarioDTO, funcionario);
 			return funcionarioDTO;
 		}
 		throw new FuncionarioException("Funcionario não econtrado.");
 	}
 	
-	public void delete(Integer idFuncionario) {
+	public String delete(Integer idFuncionario) throws FuncionarioException {
+Optional<Funcionario> funcionarioOptional = funcionarioRepository.findById(idFuncionario);
+		
+		if (funcionarioOptional.isPresent()) {
 		funcionarioRepository.deleteById(idFuncionario);
+		return "Funcionario deletado com sucesso!";
 	}
+		throw new FuncionarioException("Cliente não encontrado");
+	}
+
 	
 	public String atualizar(Integer idFuncionario, FuncionarioDTO funcionarioDTO) throws FuncionarioException {
 		Optional<Funcionario> funOptional = funcionarioRepository.findById(idFuncionario);
@@ -63,7 +70,8 @@ public class FuncionarioService {
 			funcionario = funOptional.get();
 			if(funcionarioDTO.getCpf()!= null) {
 				funcionario.setCpf(funcionarioDTO.getCpf());
-			}if(funcionarioDTO.getNome()!= null) {
+			}
+			if(funcionarioDTO.getNome()!= null) {
 				funcionario.setNome(funcionarioDTO.getNome());
 			}
 			funcionarioRepository.save(funcionario);
@@ -74,19 +82,19 @@ public class FuncionarioService {
 	
 	public List<FuncionarioDTO> todosFuncionarios(){
 		List<Funcionario> lisFuncionarios = funcionarioRepository.findAll();
-		List<FuncionarioDTO> funcionarioDTOs = new ArrayList<FuncionarioDTO>();
+		List<FuncionarioDTO> funcionarioDTOs = new ArrayList<>();
 		
 		for (Funcionario funcionario : lisFuncionarios) {
 			FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
-			toDTO(funcionarioDTO, funcionario);
-			funcionarioRepository.save(funcionario);
+			funcionarioDTO = toDTO(funcionarioDTO, funcionario);
+			funcionarioDTOs.add(funcionarioDTO);
 		}
 		return funcionarioDTOs;
 	}
 	public void salvarListaFuncionario(List<FuncionarioDTO> listaFuncionarioDTO) {
 		for (FuncionarioDTO funcionarioDTO : listaFuncionarioDTO) {
 			Funcionario funcionario = new Funcionario();
-			toModel(funcionario, funcionarioDTO);
+			funcionario = toModel(funcionario, funcionarioDTO);
 			funcionarioRepository.save(funcionario);
 		}
 	}

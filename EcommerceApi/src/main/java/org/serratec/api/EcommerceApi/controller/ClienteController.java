@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.serratec.api.EcommerceApi.DTO.ClienteDTO;
 import org.serratec.api.EcommerceApi.exception.ClienteException;
-import org.serratec.api.EcommerceApi.model.Cliente;
 import org.serratec.api.EcommerceApi.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,28 +31,28 @@ public class ClienteController {
 	}
 
 	@GetMapping("/buscar/{idCliente}")
-	public ResponseEntity<Cliente> buscarPorId(@PathVariable Integer idCliente) throws ClienteException {
-		clienteService.buscarPorId(idCliente);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<ClienteDTO> buscarPorId(@PathVariable Integer idCliente) throws ClienteException {
+		return new ResponseEntity<>(clienteService.buscarPorId(idCliente), 
+				HttpStatus.ACCEPTED);
 	}
 
 	@PutMapping("/atualizar/{idCliente}")
-	public ResponseEntity<Void> atualizar(@PathVariable Integer idCliente, @RequestBody ClienteDTO clienteDTO)
+	public ResponseEntity<String> atualizar(@PathVariable Integer idCliente, @RequestBody ClienteDTO clienteDTO)
 			throws ClienteException {
-		clienteService.atualizar(idCliente, clienteDTO);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(clienteService.atualizar(idCliente, clienteDTO), 
+				HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/delete/{idCliente}")
-	public ResponseEntity<Void> delete(@PathVariable Integer idCliente) {
-		clienteService.delete(idCliente);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<String> delete(@PathVariable Integer idCliente) throws ClienteException{
+		return new ResponseEntity<>(clienteService.delete(idCliente),
+				HttpStatus.ACCEPTED);
 	}
 
 	@GetMapping("/lista")
-	public ResponseEntity<List<Cliente>> listaTodos() {
-		clienteService.todosClientes();
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<List<ClienteDTO>> listaTodos() {
+		return new ResponseEntity<>(clienteService.todosClientes(), 
+				HttpStatus.ACCEPTED);
 	}
 
 	@PostMapping("/salvar-lista")

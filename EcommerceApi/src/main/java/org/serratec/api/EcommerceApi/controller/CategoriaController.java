@@ -32,21 +32,20 @@ public class CategoriaController {
 	}
 	
 	@GetMapping("/buscar/{idCategoria}")
-	public ResponseEntity<Categoria> buscarPorId(@PathVariable Integer idCategoria) throws CategoriaException {
-		categoriaService.buscarPorId(idCategoria);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<CategoriaDTO> buscarPorId(@PathVariable Integer idCategoria) throws CategoriaException {
+		return new ResponseEntity<>(categoriaService.buscarPorId(idCategoria),HttpStatus.ACCEPTED);
 	}
 	
 	@PutMapping("/atualizar/{idCategoria}") 
-    public ResponseEntity<Void> atualizar(@PathVariable Integer idCategoria,@RequestBody CategoriaDTO categoriaDTO) throws CategoriaException{
-        categoriaService.atualizar(idCategoria, categoriaDTO);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    public ResponseEntity<String> atualizar(@PathVariable Integer idCategoria,@RequestBody CategoriaDTO categoriaDTO) 
+    		throws CategoriaException{
+         return new ResponseEntity<>(categoriaService.atualizar(idCategoria, categoriaDTO),HttpStatus.ACCEPTED);
 	}
 	
 	@DeleteMapping("/delete/{idCategoria}")
-	public ResponseEntity<Void> delete(@PathVariable Integer idCategoria) {
-		categoriaService.delete(idCategoria);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<String> delete(@PathVariable Integer idCategoria) throws CategoriaException {
+		return new ResponseEntity<>(categoriaService.delete(idCategoria), 
+				HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/lista")

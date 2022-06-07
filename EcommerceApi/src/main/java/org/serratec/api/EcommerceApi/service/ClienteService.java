@@ -48,9 +48,9 @@ public class ClienteService {
 	
 	public EnderecoDTO toEnderecoDTO(Endereco endereco) {
         EnderecoDTO enderecoDTO = new EnderecoDTO();
-        endereco.setCep(endereco.getCep());
-        endereco.setComplemento(endereco.getComplemento());
-        endereco.setNumero(endereco.getNumero());
+        enderecoDTO.setCep(endereco.getCep());
+        enderecoDTO.setComplemento(endereco.getComplemento());
+        enderecoDTO.setNumero(endereco.getNumero());
         return enderecoDTO;
     }
 
@@ -75,16 +75,23 @@ public class ClienteService {
 		throw new ClienteException("Cliente não encontrado");
 	}
 
-	public void delete(Integer idCliente) {
+	public String delete(Integer idCliente) throws ClienteException{
+		Optional<Cliente> clienteOptional = clienteRepository.findById(idCliente);
+		
+		if (clienteOptional.isPresent()) {
 		clienteRepository.deleteById(idCliente);
+		return "Cliente deletado com sucesso!";
+	}
+		throw new ClienteException("Cliente não encontrado");
 	}
 
+	
 	public String atualizar(Integer idCliente, ClienteDTO clienteDTO) throws ClienteException {
-		Optional<Cliente> funOptional = clienteRepository.findById(idCliente);
+		Optional<Cliente> clienteOptional = clienteRepository.findById(idCliente);
 		Cliente cliente = new Cliente();
 
-		if (funOptional.isPresent()) {
-			cliente = funOptional.get();
+		if (clienteOptional.isPresent()) {
+			cliente = clienteOptional.get();
 			if (clienteDTO.getCpf() != null) {
 				cliente.setCpf(clienteDTO.getCpf());
 			}
@@ -107,19 +114,19 @@ public class ClienteService {
 				cliente.setTelefone(clienteDTO.getTelefone());
 			}
 			clienteRepository.save(cliente);
-			return "Cliente " + clienteDTO.getNomeCompleto() + " foi atualizado.";
+			return "Cliente " + cliente.getNomeCompleto() + " foi atualizado.";
 		}
 			throw new ClienteException("O cliente não foi atualizado");
 	}
 
 	public List<ClienteDTO> todosClientes() {
 		List<Cliente> lisClientes = clienteRepository.findAll();
-		List<ClienteDTO> clienteDTOs = new ArrayList<ClienteDTO>();
+		List<ClienteDTO> clienteDTOs = new ArrayList<>();
 
 		for (Cliente cliente : lisClientes) {
 			ClienteDTO clienteDTO = new ClienteDTO();
 			clienteDTO = toDTO(clienteDTO, cliente);
-			clienteRepository.save(cliente);
+			clienteDTOs.add(clienteDTO);
 		}
 		return clienteDTOs;
 	}

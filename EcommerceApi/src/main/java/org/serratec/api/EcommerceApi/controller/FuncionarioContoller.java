@@ -44,15 +44,15 @@ public class FuncionarioContoller {
 	}
 	
 	@DeleteMapping("/delete/{idFuncionario}")
-	public ResponseEntity<Void> delete(@PathVariable Integer idFuncionario) {
-		funcionarioService.delete(idFuncionario);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<String> delete(@PathVariable Integer idFuncionario) throws FuncionarioException{
+		return new ResponseEntity<>(funcionarioService.delete(idFuncionario),
+				HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/lista")
-	public ResponseEntity<List<Funcionario>> listaTodos(){
-		funcionarioService.todosFuncionarios();
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<List<FuncionarioDTO>> listaTodos(){
+				return new ResponseEntity<>(funcionarioService.todosFuncionarios(),
+						HttpStatus.ACCEPTED);
 	}
 	
 	@PostMapping("/salvar-lista")
