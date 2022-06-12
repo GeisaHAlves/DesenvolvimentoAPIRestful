@@ -5,7 +5,6 @@ import java.util.List;
 import org.serratec.api.EcommerceApi.DTO.ProdutoDTO;
 import org.serratec.api.EcommerceApi.DTO.RelatorioDTO;
 import org.serratec.api.EcommerceApi.exception.ProdutoException;
-import org.serratec.api.EcommerceApi.model.Produto;
 import org.serratec.api.EcommerceApi.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,9 +32,12 @@ public class ProdutoController {
 	}
 	
 	@GetMapping("/buscar/{idProduto}")
-	public ResponseEntity<Produto> buscarPorId(@PathVariable Integer idProduto) throws ProdutoException {
-		produtoService.buscarPorId(idProduto);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<ProdutoDTO> buscarPorId(@PathVariable Integer idProduto) {
+		try {
+			return ResponseEntity.ok(produtoService.buscarPorId(idProduto));
+		} catch (ProdutoException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PutMapping("/atualizar/{idProduto}") 
@@ -45,13 +47,12 @@ public class ProdutoController {
 	
 	@DeleteMapping("/delete/{idProduto}")
 	public ResponseEntity<String> delete(@PathVariable Integer idProduto) throws ProdutoException {
-				return new ResponseEntity<>(produtoService.delete(idProduto),HttpStatus.ACCEPTED);
+				return new ResponseEntity<>(produtoService.delete(idProduto),HttpStatus.NO_CONTENT);
 	}
 	
 	@GetMapping("/lista")
-	public ResponseEntity<List<Produto>> listaTodos(){
-		produtoService.todosProdutos();
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<List<ProdutoDTO>> listaTodos(){
+		return ResponseEntity.ok(produtoService.todosProdutos());
 	}
 	
 

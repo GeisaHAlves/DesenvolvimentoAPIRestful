@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.serratec.api.EcommerceApi.DTO.FuncionarioDTO;
 import org.serratec.api.EcommerceApi.exception.FuncionarioException;
-import org.serratec.api.EcommerceApi.model.Funcionario;
 import org.serratec.api.EcommerceApi.service.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,9 +31,12 @@ public class FuncionarioContoller {
 	}
 	
 	@GetMapping("/buscar/{idFuncionario}")
-	public ResponseEntity<Funcionario> buscarPorId(@PathVariable Integer idFuncionario) throws FuncionarioException {
-		funcionarioService.buscarPorId(idFuncionario);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<FuncionarioDTO> buscarPorId(@PathVariable Integer idFuncionario) {
+		try {
+			return ResponseEntity.ok(funcionarioService.buscarPorId(idFuncionario));
+		} catch (FuncionarioException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PutMapping("/atualizar/{idFuncionario}") 
@@ -46,13 +48,12 @@ public class FuncionarioContoller {
 	@DeleteMapping("/delete/{idFuncionario}")
 	public ResponseEntity<String> delete(@PathVariable Integer idFuncionario) throws FuncionarioException{
 		return new ResponseEntity<>(funcionarioService.delete(idFuncionario),
-				HttpStatus.ACCEPTED);
+				HttpStatus.NO_CONTENT);
 	}
 	
 	@GetMapping("/lista")
 	public ResponseEntity<List<FuncionarioDTO>> listaTodos(){
-				return new ResponseEntity<>(funcionarioService.todosFuncionarios(),
-						HttpStatus.ACCEPTED);
+				return ResponseEntity.ok(funcionarioService.todosFuncionarios());
 	}
 	
 	@PostMapping("/salvar-lista")

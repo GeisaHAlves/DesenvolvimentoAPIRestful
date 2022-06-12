@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.mail.MessagingException;
+import javax.transaction.Transactional;
 
 import org.serratec.api.EcommerceApi.DTO.ProdutoDTO;
 import org.serratec.api.EcommerceApi.DTO.RelatorioDTO;
@@ -146,7 +147,7 @@ Optional<Produto> produtoOptional = produtoRepository.findById(idProduto);
 			produtoRepository.save(produto);
 		}
 	}
-
+	@Transactional
 	public void atualizarEstoqueVenda(Pedido pedido) throws EstoqueException, EmailException, MessagingException, PedidoException {
 		for (VendasItem item : pedido.getItens()) {
 			Optional<Produto> produtoOpt = produtoRepository.findById(item.getProduto().getIdProduto());

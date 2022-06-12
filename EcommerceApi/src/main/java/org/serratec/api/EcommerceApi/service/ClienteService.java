@@ -45,14 +45,14 @@ public class ClienteService {
 		clienteDTO.setTelefone(cliente.getTelefone());
 		return clienteDTO;
 	}
-	
+
 	public EnderecoDTO toEnderecoDTO(Endereco endereco) {
-        EnderecoDTO enderecoDTO = new EnderecoDTO();
-        enderecoDTO.setCep(endereco.getCep());
-        enderecoDTO.setComplemento(endereco.getComplemento());
-        enderecoDTO.setNumero(endereco.getNumero());
-        return enderecoDTO;
-    }
+		EnderecoDTO enderecoDTO = new EnderecoDTO();
+		enderecoDTO.setCep(endereco.getCep());
+		enderecoDTO.setComplemento(endereco.getComplemento());
+		enderecoDTO.setNumero(endereco.getNumero());
+		return enderecoDTO;
+	}
 
 	public String salvar(ClienteDTO clienteDTO) {
 		Cliente cliente = new Cliente();
@@ -75,17 +75,16 @@ public class ClienteService {
 		throw new ClienteException("Cliente não encontrado");
 	}
 
-	public String delete(Integer idCliente) throws ClienteException{
+	public String delete(Integer idCliente) throws ClienteException {
 		Optional<Cliente> clienteOptional = clienteRepository.findById(idCliente);
-		
+
 		if (clienteOptional.isPresent()) {
-		clienteRepository.deleteById(idCliente);
-		return "Cliente deletado com sucesso!";
-	}
+			clienteRepository.deleteById(idCliente);
+			return "Cliente deletado com sucesso!";
+		}
 		throw new ClienteException("Cliente não encontrado");
 	}
 
-	
 	public String atualizar(Integer idCliente, ClienteDTO clienteDTO) throws ClienteException {
 		Optional<Cliente> clienteOptional = clienteRepository.findById(idCliente);
 		Cliente cliente = new Cliente();
@@ -116,7 +115,7 @@ public class ClienteService {
 			clienteRepository.save(cliente);
 			return "Cliente " + cliente.getNomeCompleto() + " foi atualizado.";
 		}
-			throw new ClienteException("O cliente não foi atualizado");
+		throw new ClienteException("O cliente não foi atualizado");
 	}
 
 	public List<ClienteDTO> todosClientes() {

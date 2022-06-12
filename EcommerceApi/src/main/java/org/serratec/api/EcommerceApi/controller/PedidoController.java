@@ -9,7 +9,6 @@ import org.serratec.api.EcommerceApi.DTO.PedidoDTO;
 import org.serratec.api.EcommerceApi.exception.EmailException;
 import org.serratec.api.EcommerceApi.exception.EstoqueException;
 import org.serratec.api.EcommerceApi.exception.PedidoException;
-import org.serratec.api.EcommerceApi.model.Pedido;
 import org.serratec.api.EcommerceApi.service.CompraService;
 import org.serratec.api.EcommerceApi.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +47,12 @@ public class PedidoController {
 	}
 	
 	@GetMapping("/buscar/{idPedido}")
-	public ResponseEntity<Pedido> buscarPorId(@PathVariable Integer idPedido) throws PedidoException {
-		pedidoService.buscarPorId(idPedido);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<PedidoDTO> buscarPorId(@PathVariable Integer idPedido) {
+		try {
+			return ResponseEntity.ok(pedidoService.buscarPorId(idPedido));
+		} catch (PedidoException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PutMapping("/atualizar/{idPedido}") 
@@ -66,8 +68,7 @@ public class PedidoController {
 	}
 	
 	@GetMapping("/lista")
-	public ResponseEntity<List<Pedido>> listaTodos(){
-		pedidoService.todosPedidos();
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<List<PedidoDTO>> listaTodos(){
+		return ResponseEntity.ok(pedidoService.todosPedidos());
 	}
 }

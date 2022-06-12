@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.serratec.api.EcommerceApi.DTO.EnderecoDTO;
 import org.serratec.api.EcommerceApi.exception.EnderecoException;
-import org.serratec.api.EcommerceApi.model.Endereco;
 import org.serratec.api.EcommerceApi.service.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,9 +31,12 @@ public class EnderecoController {
 	}
 	
 	@GetMapping("/buscar/{idEndereco}")
-	public ResponseEntity<Endereco> buscarPorId(@PathVariable Long idEndereco) throws EnderecoException {
-		enderecoService.buscarPorId(idEndereco);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<EnderecoDTO> buscarPorId(@PathVariable Long idEndereco) {
+		try {
+			return ResponseEntity.ok(enderecoService.buscarPorId(idEndereco));
+		} catch (EnderecoException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PutMapping("/atualizar/{idEndereco}") 
@@ -46,13 +48,12 @@ public class EnderecoController {
 	@DeleteMapping("/delete/{idEndereco}")
 	public ResponseEntity<Void> delete(@PathVariable Long idEndereco) {
 		enderecoService.delete(idEndereco);
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
 	@GetMapping("/lista")
-	public ResponseEntity<List<Endereco>> listaTodos(){
-		enderecoService.todosEnderecos();
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	public ResponseEntity<List<EnderecoDTO>> listaTodos(){
+		return ResponseEntity.ok(enderecoService.todosEnderecos());
 	}
 }
 
